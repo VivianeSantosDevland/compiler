@@ -29,7 +29,7 @@ public class IsiScanner {
 	}
 	
 	public Token nextToken() {
-		Token token = null;
+		Token token;
 		char currentChar;
 		String term = "";
 		if(isEOF()) {
@@ -62,7 +62,7 @@ public class IsiScanner {
 				if(isChar(currentChar)|| isDigit(currentChar)) {
 					estado = 1;
 					term += currentChar;
-				}else if(isSpace(currentChar) || isOperator(currentChar)){
+				}else if(!isSpace(currentChar) || !isOperator(currentChar)){
 					estado = 2;
 					term += currentChar;//
 				}else {
@@ -71,10 +71,11 @@ public class IsiScanner {
 				break;
 			
 			case 2:
-				back();
+			
 				token = new Token();
 				token.setType(Token.TK_IDENTFIER);				
 				token.setText(term);
+				back();
 				return token;
 				
 			case 3:
@@ -96,7 +97,8 @@ public class IsiScanner {
 				token.setText(term);
 				return token;
 			case 5:
-				
+				//estado = 5;
+				//back();
 				term += currentChar;
 				token = new Token();
 				token.setType(Token.TK_OPERATOR);
@@ -114,15 +116,15 @@ public class IsiScanner {
 	}
 	
 	private boolean isChar(char c) {
-		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+		return ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'));
 	}
 	
 	private boolean isOperator(char c) {
-		return c == '>' || c == '<' || c == '=' || c == '!';
+		return (c == '>') || (c == '<') || (c == '=') || (c == '!');
 	}
 	
 	private boolean isSpace(char c) {
-		return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+		return (c == ' ') || (c == '\t') || (c == '\n') || (c == '\r');
 	}
 	
 	private char nextChar() {
